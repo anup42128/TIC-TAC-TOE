@@ -36,7 +36,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
           Experience the classic game with a modern, premium twist. 
           Challenge our perfect AI or play with a friend.
         </p>
-        
         <div className="cta-group">
           <button className="cta-button guest" onClick={() => onStart(true)}>
             Play As Guest
@@ -47,23 +46,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         </div>
       </div>
       
-      <div className="features-grid">
-        <div className="feature-card">
-          <span className="feature-icon">🤖</span>
-          <h3>Perfect AI</h3>
-          <p>Powered by Minimax algorithm for an unbeatable challenge.</p>
-        </div>
-        <div className="feature-card">
-          <span className="feature-icon">✨</span>
-          <h3>Premium UI</h3>
-          <p>Stunning glassmorphism design with smooth animations.</p>
-        </div>
-        <div className="feature-card">
-          <span className="feature-icon">📱</span>
-          <h3>Responsive</h3>
-          <p>Perfectly optimized for both desktop and mobile play.</p>
-        </div>
-      </div>
     </div>
   );
 };

@@ -7,6 +7,7 @@ const App: React.FC = () => {
   const [currentView, setCurrentView] = React.useState<'landing' | 'game'>('landing');
   const [isGuest, setIsGuest] = React.useState(true);
   const [showOptionsMenu, setShowOptionsMenu] = React.useState(false);
+  const [optionsView, setOptionsView] = React.useState<'main' | 'friends'>('main');
   const { board, winner, winningLine, isDraw, handleClick, resetGame, isXNext, isAiMode, toggleAiMode } = useGameLogic();
 
   const handleStartGame = (guest: boolean) => {
@@ -17,7 +18,13 @@ const App: React.FC = () => {
   const handleLogout = () => {
     resetGame();
     setShowOptionsMenu(false);
+    setOptionsView('main');
     setCurrentView('landing');
+  };
+
+  const closeOptions = () => {
+    setShowOptionsMenu(false);
+    setOptionsView('main');
   };
 
   let status;
@@ -73,17 +80,39 @@ const App: React.FC = () => {
       </div>
 
       {showOptionsMenu && (
-        <div className="options-overlay" onClick={() => setShowOptionsMenu(false)}>
+        <div className="options-overlay" onClick={closeOptions}>
           <div className="options-card" onClick={(e) => e.stopPropagation()}>
-            <button className="options-close" onClick={() => setShowOptionsMenu(false)}>×</button>
-            <h2>Options</h2>
+            <button className="options-close" onClick={closeOptions}>×</button>
+            <div className="options-header">
+              {optionsView === 'friends' && (
+                <button className="back-menu-icon" onClick={() => setOptionsView('main')}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              )}
+              <h2>{optionsView === 'main' ? 'Options' : 'Play with Friends'}</h2>
+            </div>
             <div className="options-list">
-              <button className="options-item disabled">
-                Play with Friends <span>(Coming Soon)</span>
-              </button>
-              <button className="options-item logout-variant" onClick={handleLogout}>
-                Logout
-              </button>
+              {optionsView === 'main' ? (
+                <>
+                  <button className="options-item" onClick={() => setOptionsView('friends')}>
+                    Play with Friends
+                  </button>
+                  <button className="options-item logout-variant" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="options-item">
+                    Join A Room
+                  </button>
+                  <button className="options-item">
+                    Create A Room
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
