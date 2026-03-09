@@ -2,7 +2,7 @@ import React from 'react';
 import AuthModal from './AuthModal';
 
 interface LandingPageProps {
-  onStart: (isGuest: boolean) => void;
+  onStart: (isGuest: boolean, userData?: any) => void;
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
@@ -13,7 +13,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
       <AuthModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
-        onAuthSuccess={() => onStart(false)}
+        onAuthSuccess={(data) => onStart(false, data)}
       />
       
       <div className="hero-section">

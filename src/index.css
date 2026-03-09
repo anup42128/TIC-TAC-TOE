@@ -401,11 +401,6 @@ body::before {
   height: 22px;
 }
 
-.back-menu-icon:hover {
-  color: var(--text-primary);
-  transform: translateX(-3px);
-}
-
 .options-card h2 {
   font-size: 1.75rem;
   font-weight: 800;
@@ -892,6 +887,14 @@ body::before {
     margin-bottom: 1.5rem;
   }
 
+  .room-code-display {
+    top: auto;
+    bottom: 2rem;
+    right: 50%;
+    transform: translateX(50%);
+    width: auto;
+  }
+
   .back-menu-icon {
     left: 0;
     top: -0.6rem; /* Moved it further up */
@@ -902,4 +905,75 @@ body::before {
     width: 26px;
     height: 26px;
   }
+}
+
+.room-code-display {
+  position: fixed;
+  top: 4.5rem; /* Just below the nav */
+  right: 2rem;
+  z-index: 15;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: fadeInDown 0.4s ease-out;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.room-code-display span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.room-code-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.4rem;
+  letter-spacing: 2px;
+}
+
+.room-code-input {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem !important;
+  letter-spacing: 8px;
+  padding: 1rem !important;
+}
+
+.waiting-overlay {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.pulsing-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-left: 5px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
 }

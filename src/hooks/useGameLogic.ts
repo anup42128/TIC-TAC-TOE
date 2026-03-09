@@ -2,10 +2,26 @@ import { useState, useCallback, useEffect } from 'react';
 
 export type Player = 'X' | 'O' | null;
 
-export const useGameLogic = () => {
+interface MultiplayerRoom {
+  board: Player[];
+  is_x_next: boolean;
+  status: string;
+  player1_id: string;
+  player2_id: string;
+}
+
+export const useGameLogic = (roomData?: MultiplayerRoom | null, userSymbol?: Player) => {
   const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState<boolean>(true);
   const [isAiMode, setIsAiMode] = useState<boolean>(false);
+
+  // Sync with multiplayer room data
+  useEffect(() => {
+    if (roomData) {
+      setBoard(roomData.board);
+      setIsXNext(roomData.is_x_next);
+    }
+  }, [roomData]);
 
   const calculateWinner = (squares: Player[]): { winner: Player; line: number[] | null } => {
     const lines = [
@@ -73,15 +89,31 @@ export const useGameLogic = () => {
     return move;
   };
 
-  const handleClick = useCallback((index: number) => {
+  const handleClick = useCallback((index: number, onMove?: (newBoard: Player[]) => void) => {
     if (board[index] || winner || isDraw) return;
-    if (isAiMode && !isXNext) return; // Prevent clicking during AI turn
+    
+    // AI Mode guards
+    if (isAiMode && !isXNext) return;
+
+    // Multiplayer turn guards
+    if (roomData) {
+      const currentTurnSymbol = isXNext ? 'X' : 'O';
+      if (userSymbol !== currentTurnSymbol) return;
+      if (roomData.status !== 'playing') return;
+    }
 
     const newBoard = [...board];
     newBoard[index] = isXNext ? 'X' : 'O';
-    setBoard(newBoard);
-    setIsXNext(!isXNext);
-  }, [board, isXNext, winner, isDraw, isAiMode]);
+
+    if (onMove) {
+      // In multiplayer, we just trigger the move callback
+      onMove(newBoard);
+    } else {
+      // In local mode, we update state directly
+      setBoard(newBoard);
+      setIsXNext(!isXNext);
+    }
+  }, [board, isXNext, winner, isDraw, isAiMode, roomData, userSymbol]);
 
   useEffect(() => {
     if (isAiMode && !isXNext && !winner && !isDraw) {
@@ -93,13 +125,12 @@ export const useGameLogic = () => {
           setBoard(newBoard);
           setIsXNext(true);
         }
-      }, 600); // Slight delay for more natural feel
+      }, 600);
       return () => clearTimeout(timer);
     }
   }, [isAiMode, isXNext, board, winner, isDraw]);
 
   const resetGame = useCallback(() => {
-    console.log('Resetting game...');
     setBoard(Array(9).fill(null));
     setIsXNext(true);
   }, []);

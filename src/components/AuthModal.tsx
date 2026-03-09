@@ -4,7 +4,7 @@ import { supabase } from '../supabaseClient';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAuthSuccess: () => void;
+  onAuthSuccess: (userData: any) => void;
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess }) => {
@@ -59,6 +59,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
           }
           throw signUpError;
         }
+
+        onAuthSuccess({ id: formData.username, username: formData.username }); // Use username as ID for now
       } else {
         const { data, error: signInError } = await supabase
           .from('profiles')
@@ -70,9 +72,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
         if (signInError || !data) {
           throw new Error('Invalid username or password');
         }
-      }
 
-      onAuthSuccess();
+        onAuthSuccess(data);
+      }
     } catch (err: any) {
       setError(err.message || 'An error occurred');
     } finally {
